@@ -5,7 +5,7 @@ public class Mycar {
         Car honda = new Car("blue");
 
 
-        toyota.setSpeed(200);
+        toyota.setSpeed(300);
         toyota.setMilage(1345);
 
         honda.setMilage(8987);
