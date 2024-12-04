@@ -18,7 +18,7 @@ public class Myrectangle {
         System.out.println("Area: "+ Area_ns);
         System.out.println("Perimeter: "+Perimeter_ns);
 
-        //นอนเถอะ
+        //ddd
 
 
     }   
