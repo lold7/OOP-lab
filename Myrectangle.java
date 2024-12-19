@@ -1,5 +1,3 @@
-import OOP.Rectangle;
-
 public class Myrectangle {
     public static void main(String[] args) {
         
