@@ -50,9 +50,8 @@ class Circle extends Shape{
 class Rectangle extends Shape{
     private double width;
     private double length;
-    private String color;
-    private boolean filled;
     
+
     public Rectangle(double width,double length, String color , boolean filled){
         super(color, filled);
         this.width = width;
