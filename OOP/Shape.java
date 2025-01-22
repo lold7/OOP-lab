@@ -18,7 +18,7 @@ public class Shape {
     public void setFilled(boolean filled){
         this.filled = filled;
     }
-    @Override
+    
     public String toString(){
         return "A shape with color of " +color + " and " + (filled ? "filled" :"not filled");
     }
@@ -42,7 +42,7 @@ class Circle extends Shape{
     public double getPerimeter(){
         return 2* Math.PI* radius;
     }
-    @Override
+    
     public String toString(){
         return "A Circle with radius=" + radius + ", which is a subclass of " + super.toString();
     }
@@ -74,7 +74,7 @@ class Rectangle extends Shape{
     public double getPerimeter(){
         return (width + length) * 2;
     }
-    @Override
+    
     public String toString(){
         return "A Rectangle with width=" + width + " and length=" + length+", which is a subclass of " + super.toString();
     }
