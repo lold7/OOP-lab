@@ -1,6 +1,5 @@
 import java.util.Date;
 
-import javax.annotation.processing.SupportedSourceVersion;
 
 public class Loan {
     private String name;
