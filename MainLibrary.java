@@ -1,5 +1,3 @@
-import java.util.*;
-
 public class MainLibrary {
     public static void main(String[] args) {
         LibraryItem[] item = new LibraryItem[3];
