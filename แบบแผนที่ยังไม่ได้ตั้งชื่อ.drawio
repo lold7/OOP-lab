@@ -1,90 +1,117 @@
-package se233.chapter1.controller;
-
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
-import javafx.scene.layout.StackPane;
-import se233.chapter1.Launcher;
+package se233.chapter1;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import se233.chapter1.controller.GenCharacter;
+import se233.chapter1.controller.GenItemList;
 import se233.chapter1.model.character.BasedCharacter;
 import se233.chapter1.model.item.Armor;
 import se233.chapter1.model.item.BasedEquipment;
 import se233.chapter1.model.item.Weapon;
+import se233.chapter1.view.CharacterPane;
+import se233.chapter1.view.EquipPane;
+import se233.chapter1.view.InventoryPane;
 
 import java.util.ArrayList;
 
-public class AllCustomHandler {
-    public static class GenCharacterHandler implements EventHandler<ActionEvent> {
-        @Override
-        public void handle(ActionEvent event) {
-            Launcher.setMainCharacter(GenCharacter.setUpCharacter());
-            Launcher.refreshPane();
-        }
+import static javafx.application.Application.launch;
+
+public class Launcher extends Application {
+    public static Scene getMainScene() {
+        return mainScene;
     }
-    public static void onDragDetected(MouseEvent event, BasedEquipment equipment, ImageView imgView) {
-        Dragboard db = imgView.startDragAndDrop(TransferMode.ANY);
-        db.setDragView(imgView.getImage());
-        ClipboardContent content = new ClipboardContent();
-        content.put(equipment.DATA_FORMAT, equipment);
-        db.setContent(content);
-        event.consume();
+
+    public static void setMainScene(Scene mainScene) {
+        Launcher.mainScene = mainScene;
     }
-    public static void onDragOver(DragEvent event, String type) {
-        Dragboard dragboard = event.getDragboard();
-        BasedEquipment retrievedEquipment = (BasedEquipment)dragboard.getContent(BasedEquipment.DATA_FORMAT);
-        if (dragboard.hasContent(BasedEquipment.DATA_FORMAT) && retrievedEquipment.
-                getClass().getSimpleName().equals(type))
-            event.acceptTransferModes(TransferMode.MOVE);
+
+    private static Scene mainScene;
+    private static BasedCharacter mainCharacter = null;
+
+    private static ArrayList<BasedEquipment> allEquipments = null;
+
+    public static Weapon getEquippedWeapon() {
+        return equippedWeapon;
     }
-    public static void onDragDropped(DragEvent event, Label lbl, StackPane imgGroup) {
-        boolean dragCompleted = false;
-        Dragboard dragboard = event.getDragboard();
-        ArrayList<BasedEquipment> allEquipments = Launcher.getAllEquipments();
-        if(dragboard.hasContent(BasedEquipment.DATA_FORMAT)) {
-            BasedEquipment retrievedEquipment = (BasedEquipment)dragboard.getContent(BasedEquipment.DATA_FORMAT);
-            BasedCharacter character = Launcher.getMainCharacter();
-            if(retrievedEquipment.getClass().getSimpleName().equals("Weapon")) {
-                if (Launcher.getEquippedWeapon() != null)
-                    allEquipments.add(Launcher.getEquippedWeapon());
-                Launcher.setEquippedWeapon((Weapon) retrievedEquipment);
-                character.equipWeapon((Weapon) retrievedEquipment);
-            } else {
-                if (Launcher.getEquippedArmor() != null)
-                    allEquipments.add(Launcher.getEquippedArmor());
-                Launcher.setEquippedArmor((Armor) retrievedEquipment);
-                character.equipArmor((Armor) retrievedEquipment);
-            }
-            Launcher.setMainCharacter(character);
-            Launcher.setAllEquipments(allEquipments);
-            Launcher.refreshPane();
-            ImageView imgView = new ImageView();
-            if (imgGroup.getChildren().size()!=1) {
-                imgGroup.getChildren().remove(1);
-                Launcher.refreshPane();
-            }
-            lbl.setText(retrievedEquipment.getClass().getSimpleName() + ":\n" + retrievedEquipment.getName());
-            imgView.setImage(new Image(Launcher.class.getResource(retrievedEquipment.getImagepath()).toString()));
-            imgGroup.getChildren().add(imgView);
-            dragCompleted = true;
-        }
-        event.setDropCompleted(dragCompleted);
+
+    public static void setEquippedWeapon(Weapon equippedWeapon) {
+        Launcher.equippedWeapon = equippedWeapon;
     }
-    public static void onEquipDone(DragEvent event) {
-        Dragboard dragboard = event.getDragboard();
-        ArrayList<BasedEquipment> allEquipments = Launcher.getAllEquipments();
-        BasedEquipment retrievedEquipment = (BasedEquipment)dragboard.getContent(BasedEquipment.DATA_FORMAT);
-        int pos =-1;
-        for(int i=0; i<allEquipments.size() ; i++) {
-            if (allEquipments.get(i).getName().equals(retrievedEquipment.getName())) {
-                pos = i;
-            }
-        }
-        if (pos !=-1) {
-            allEquipments.remove(pos);
-        }
-        Launcher.setAllEquipments(allEquipments);
-        Launcher.refreshPane();
+
+    private static Weapon equippedWeapon = null;
+
+    public static Armor getEquippedArmor() {
+        return equippedArmor;
+    }
+
+    public static void setEquippedArmor(Armor equippedArmor) {
+        Launcher.equippedArmor = equippedArmor;
+    }
+
+    public static ArrayList<BasedEquipment> getAllEquipments() {
+        return allEquipments;
+    }
+
+    public static void setAllEquipments(ArrayList<BasedEquipment> allEquipments) {
+        Launcher.allEquipments = allEquipments;
+    }
+
+    private static Armor equippedArmor = null;
+    private static CharacterPane characterPane = null;
+
+    public static EquipPane getEquipPane() {
+        return equipPane;
+    }
+
+    public static void setEquipPane(EquipPane equipPane) {
+        Launcher.equipPane = equipPane;
+    }
+
+    private static EquipPane equipPane = null;
+
+    public static InventoryPane getInventoryPane() {
+        return inventoryPane;
+    }
+
+    public static void setInventoryPane(InventoryPane inventoryPane) {
+        Launcher.inventoryPane = inventoryPane;
+    }
+
+    private static InventoryPane inventoryPane = null;
+    @Override
+    public void start(Stage primaryStage) throws Exception{
+        primaryStage.setTitle("Chapter1");
+        primaryStage.setResizable(false);
+        primaryStage.show();
+        mainCharacter = GenCharacter.setUpCharacter();
+        allEquipments = GenItemList.setUpItemList();
+        Pane mainPane = getMainPane();
+        mainScene = new Scene(mainPane);
+        primaryStage.setScene(mainScene);
+    }
+    public Pane getMainPane() {
+        BorderPane mainPane = new BorderPane();
+        characterPane = new CharacterPane();
+        equipPane = new EquipPane();
+        inventoryPane = new InventoryPane();
+        refreshPane();
+        mainPane.setCenter(characterPane);
+        mainPane.setLeft(equipPane);
+        mainPane.setBottom(inventoryPane);
+        return mainPane;
+    }
+    public static void refreshPane() {
+        characterPane.drawPane(mainCharacter);
+        equipPane.drawPane(equippedWeapon,equippedArmor);
+        inventoryPane.drawPane(allEquipments);
+    }
+    public static BasedCharacter getMainCharacter() { return mainCharacter; }
+    public static void setMainCharacter(BasedCharacter mainCharacter) {
+        Launcher.mainCharacter = mainCharacter;
+    }
+    public static void main(String[] args) {
+        launch(args);
     }
 }
